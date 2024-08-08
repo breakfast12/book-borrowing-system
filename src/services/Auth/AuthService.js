@@ -4,6 +4,10 @@ const UserRepository = require("../../repositories/User/UserRepository");
 const tokenBlacklist = require("../../utils/TokenBlacklist");
 
 class AuthService {
+  constructor() {
+    this.userRepository = new UserRepository();
+  }
+
   /**
    * Handles the login operation.
    *
@@ -15,7 +19,7 @@ class AuthService {
    */
   async loginService({ email, password }) {
     // Find the user by email.
-    const user = await UserRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
     if (!user) {
       // Throw an error if the user is not found.
       throw new Error("Invalid email or password");
@@ -69,4 +73,4 @@ class AuthService {
 }
 
 // Export Module
-module.exports = new AuthService();
+module.exports = AuthService;

@@ -4,7 +4,7 @@
  *   post:
  *     summary: User login
  *     tags:
- *       - Authentication
+ *       - [Authentication]
  *     description: Login a user
  *     requestBody:
  *       required: true
@@ -96,7 +96,7 @@
  *   post:
  *     summary: User logout
  *     tags:
- *       - Authentication
+ *       - [Authentication]
  *     description: Logout a user
  *     security:
  *       - bearerAuth: []

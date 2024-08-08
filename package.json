@@ -9,8 +9,8 @@
     "seed": "npx sequelize db:seed:all",
     "dev": "nodemon src/server.js",
     "test": "NODE_ENV=test npm run migrate-seeder:test && NODE_ENV=test jest",
-    "lint": "eslint src/**/*.js",
-    "lint:fix": "eslint src/**/*.js --fix",
+    "lint": "eslint src/**/*.js tests/**/*.js",
+    "lint:fix": "eslint src/**/*.js tests/**/*.js --fix",
     "format": "prettier --write 'src/**/*.js' 'tests/**/*.js' 'swagger/**/*.js'"
   },
   "keywords": [],
