@@ -2,9 +2,6 @@ const User = require("../../models/User");
 const BaseRepository = require("../BaseRepository");
 
 class UserRepository extends BaseRepository {
-  /**
-   * Constructs the UserRepository instance.
-   */
   constructor() {
     // Initialize the BaseRepository with the User model.
     super(User);
@@ -23,4 +20,4 @@ class UserRepository extends BaseRepository {
 }
 
 // Export module
-module.exports = new UserRepository();
+module.exports = UserRepository;

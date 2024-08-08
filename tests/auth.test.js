@@ -14,10 +14,9 @@ describe("Auth", () => {
         email: "",
         password: "password123",
       });
-      const parsedResponse = JSON.parse(response.text);
 
       expect(response.status).toBe(400);
-      expect("Email is required").toEqual(parsedResponse.errors.email);
+      expect("Email is required").toEqual(response.body.errors.email);
     });
 
     it("Can't login cause email must be valid email", async () => {
@@ -25,12 +24,9 @@ describe("Auth", () => {
         email: "admin",
         password: "password123",
       });
-      const parsedResponse = JSON.parse(response.text);
 
       expect(response.status).toBe(400);
-      expect("Enter a valid email address").toEqual(
-        parsedResponse.errors.email,
-      );
+      expect("Enter a valid email address").toEqual(response.body.errors.email);
     });
 
     it("Can't login cause password is required", async () => {
@@ -38,10 +34,9 @@ describe("Auth", () => {
         email: "admin@mailinator.com",
         password: "",
       });
-      const parsedResponse = JSON.parse(response.text);
 
       expect(response.status).toBe(400);
-      expect("Password is required").toEqual(parsedResponse.errors.password);
+      expect("Password is required").toEqual(response.body.errors.password);
     });
 
     it("Can't login cause unauthorized", async () => {
@@ -49,10 +44,9 @@ describe("Auth", () => {
         email: "admin123@mailinator.com",
         password: "password456",
       });
-      const parsedResponse = JSON.parse(response.text);
 
       expect(response.status).toBe(401);
-      expect("Unauthorized").toEqual(parsedResponse.error);
+      expect("Unauthorized").toEqual(response.body.error);
     });
 
     it("Success login", async () => {
@@ -60,14 +54,13 @@ describe("Auth", () => {
         email: "admin@mailinator.com",
         password: "password123",
       });
-      const parsedResponse = JSON.parse(response.text);
 
       expect(response.status).toBe(200);
-      expect("Login successful").toEqual(parsedResponse.message);
-      expect(parsedResponse).toHaveProperty("token");
-      expect(parsedResponse.token).toBeTruthy();
+      expect("Login successful").toEqual(response.body.message);
+      expect(response.body).toHaveProperty("token");
+      expect(response.body.token).toBeTruthy();
 
-      token = parsedResponse.token;
+      token = response.body.token;
     });
   });
 
@@ -77,10 +70,8 @@ describe("Auth", () => {
         .post("/api/auth/logout")
         .set("Authorization", "Bearer InvalidToken");
 
-      const parsedResponse = JSON.parse(response.text);
-
       expect(response.status).toBe(403);
-      expect("Token is not valid").toEqual(parsedResponse.error);
+      expect("Token is not valid").toEqual(response.body.error);
     });
 
     it("Success logout", async () => {
@@ -88,10 +79,8 @@ describe("Auth", () => {
         .post("/api/auth/logout")
         .set("Authorization", `Bearer ${token}`);
 
-      const parsedResponse = JSON.parse(response.text);
-
       expect(response.status).toBe(200);
-      expect("Logged out successfully").toEqual(parsedResponse.message);
+      expect("Logged out successfully").toEqual(response.body.message);
     });
 
     it("Can't logout cause already logout", async () => {
@@ -99,10 +88,8 @@ describe("Auth", () => {
         .post("/api/auth/logout")
         .set("Authorization", `Bearer ${token}`);
 
-      const parsedResponse = JSON.parse(response.text);
-
       expect(response.status).toBe(401);
-      expect("Token has been invalidated").toEqual(parsedResponse.error);
+      expect("Token has been invalidated").toEqual(response.body.error);
     });
   });
 });

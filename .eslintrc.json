@@ -9,6 +9,7 @@
         "plugin:prettier/recommended",
         "plugin:jest/recommended"
     ],
+    "plugins": ["jest"],
     "parserOptions": {
         "ecmaVersion": 12,
         "sourceType": "module"
@@ -18,9 +19,6 @@
             "files": ["**/tests/**/*.js", "**/*.test.js"],
             "env": {
                 "jest": true
-            },
-            "rules": {
-                "no-undef":"off"
             }
         }
     ],

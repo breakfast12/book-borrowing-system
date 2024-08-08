@@ -7,7 +7,11 @@ const authenticateToken = require("../../middlewares/AuthMiddleware");
 
 const router = express.Router();
 
-router.post("/login", validateUserLogin, AuthController.login);
-router.post("/logout", authenticateToken, AuthController.logout);
+router.post("/login", validateUserLogin, (req, res) =>
+  AuthController.login(req, res),
+);
+router.post("/logout", authenticateToken, (req, res) =>
+  AuthController.logout(req, res),
+);
 
 module.exports = router;

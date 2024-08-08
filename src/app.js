@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/Auth/route");
+const memberRoutes = require("./routes/Member/route");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("../swagger/swagger");
 
@@ -12,6 +13,7 @@ app.use(bodyParser.json());
 
 // Registering routes
 app.use("/api/auth", authRoutes);
+app.use("/api/member", memberRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Export module
