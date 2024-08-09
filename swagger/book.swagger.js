@@ -1,9 +1,9 @@
 /**
  * @swagger
- * /api/member:
+ * /api/book:
  *   get:
- *     summary: Retrieve a list of members
- *     tags: [Members]
+ *     summary: Retrieve a list of books
+ *     tags: [Books]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -11,7 +11,7 @@
  *         name: search
  *         schema:
  *           type: string
- *         description: Search term for members (code or name)
+ *         description: Search term for books (code, title, or author)
  *       - in: query
  *         name: per_page
  *         schema:
@@ -28,7 +28,7 @@
  *         name: sortBy
  *         schema:
  *           type: string
- *           enum: [code, name, createdAt, updatedAt]
+ *           enum: [code, title, author, stock, createdAt, updatedAt]
  *           default: createdAt
  *         description: Field to sort by
  *       - in: query
@@ -40,7 +40,7 @@
  *         description: Sort direction
  *     responses:
  *       200:
- *         description: Successfully Show List Member
+ *         description: Successfully Show List Book
  *         content:
  *           application/json:
  *             schema:
@@ -48,7 +48,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Successfully Show List Member
+ *                   example: Successfully Show List Book
  *                 data:
  *                   type: array
  *                   items:
@@ -56,21 +56,25 @@
  *                     properties:
  *                       id:
  *                         type: integer
- *                         example: 1
+ *                         example: 10
  *                       code:
  *                         type: string
- *                         example: M001
- *                       name:
+ *                         example: BNW-09
+ *                       title:
  *                         type: string
- *                         example: John Doe
+ *                         example: Brave New World
+ *                       author:
+ *                         type: string
+ *                         example: Aldous Huxley
+ *                       stock:
+ *                         type: integer
+ *                         example: 13
  *                       createdAt:
  *                         type: string
  *                         format: date-time
- *                         example: 2024-08-08T05:17:03.000Z
  *                       updatedAt:
  *                         type: string
  *                         format: date-time
- *                         example: 2024-08-08T05:17:03.000Z
  *                 meta:
  *                   type: object
  *                   properties:
@@ -82,7 +86,7 @@
  *                       example: 1
  *                     itemsPerPage:
  *                       type: integer
- *                       example: 5
+ *                       example: 1
  *                     totalPages:
  *                       type: integer
  *                       example: 1
@@ -94,17 +98,16 @@
  *                   properties:
  *                     first:
  *                       type: string
- *                       example: http://127.0.0.1:3000/api/member?per_page=1&page=1
+ *                       example: http://127.0.0.1:3000/api/book?per_page=10&page=1
  *                     previous:
  *                       type: string
  *                       example: null
  *                     next:
  *                       type: string
- *                       example: http://127.0.0.1:3000/api/member?per_page=1&page=1
+ *                       example: null
  *                     last:
  *                       type: string
- *                       example: http://127.0.0.1:3000/api/member?per_page=1&page=1
- *
+ *                       example: http://127.0.0.1:3000/api/book?per_page=10&page=1
  *       401:
  *         description: Unauthorized access
  *         content:
@@ -126,10 +129,10 @@
 
 /**
  * @swagger
- * /api/member:
+ * /api/book:
  *   post:
- *     summary: Create a new member
- *     tags: [Members]
+ *     summary: Create a new book
+ *     tags: [Books]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -139,14 +142,26 @@
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - code
+ *               - title
+ *               - author
+ *               - stock
  *             properties:
- *               name:
+ *               code:
  *                 type: string
- *                 example: John Doe
+ *                 example: SHR-1
+ *               title:
+ *                 type: string
+ *                 example: A Study in Scarlet
+ *               author:
+ *                 type: string
+ *                 example: Arthur Conan Doyle
+ *               stock:
+ *                 type: integer
+ *                 example: 1
  *     responses:
  *       201:
- *         description: Successfully Store Member
+ *         description: Successfully Store Book
  *         content:
  *           application/json:
  *             schema:
@@ -154,8 +169,8 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Successfully Store Member
- *                 member:
+ *                   example: Successfully Store Book
+ *                 book:
  *                   type: object
  *                   properties:
  *                     id:
@@ -163,10 +178,16 @@
  *                       example: 1
  *                     code:
  *                       type: string
- *                       example: M001
- *                     name:
+ *                       example: JK-45
+ *                     title:
  *                       type: string
- *                       example: John Doe
+ *                       example: Harry Potter
+ *                     author:
+ *                       type: string
+ *                       example: J.K Rowling
+ *                     stock:
+ *                       type: integer
+ *                       example: 1
  *       400:
  *         description: Validation errors
  *         content:
@@ -179,17 +200,41 @@
  *                   additionalProperties:
  *                     type: string
  *             examples:
- *               name-required:
- *                 summary: Name is required
+ *               code-required:
+ *                 summary: Code is required
  *                 value:
  *                   errors:
- *                     name: "Name is required"
- *               name-unique:
- *                 summary: Name must be unique
+ *                     code: "Code is required"
+ *               book-code-unique:
+ *                 summary: Book code must be unique
  *                 value:
  *                   errors:
- *                     name: "Name must be unique"
- *
+ *                     code: "Book code must be unique"
+ *               title-required:
+ *                 summary: Title is required
+ *                 value:
+ *                   errors:
+ *                     title: "Title is required"
+ *               author-required:
+ *                 summary: Author is required
+ *                 value:
+ *                   errors:
+ *                     author: "Author is required"
+ *               stock-required:
+ *                 summary: Stock is required
+ *                 value:
+ *                   errors:
+ *                     stock: "Stock is required"
+ *               stock-integer:
+ *                 summary: Stock must be an integer
+ *                 value:
+ *                   errors:
+ *                     stock: "Stock must be an integer"
+ *               stock-minimum:
+ *                 summary: Stock must be at least 1
+ *                 value:
+ *                   errors:
+ *                     stock: "Stock must be at least 1"
  *       401:
  *         description: Unauthorized access
  *         content:
@@ -211,10 +256,10 @@
 
 /**
  * @swagger
- * /api/member/{id}:
+ * /api/book/{id}:
  *   get:
- *     summary: Get a member by ID
- *     tags: [Members]
+ *     summary: Get a book by ID
+ *     tags: [Books]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -223,10 +268,10 @@
  *         required: true
  *         schema:
  *           type: integer
- *         description: The member ID
+ *         description: The book ID
  *     responses:
  *       200:
- *         description: Successfully Show Detail Member
+ *         description: Successfully Show Detail Book
  *         content:
  *           application/json:
  *             schema:
@@ -234,8 +279,8 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Successfully Show Detail Member
- *                 member:
+ *                   example: Successfully Show Detail Book
+ *                 book:
  *                   type: object
  *                   properties:
  *                     id:
@@ -243,12 +288,18 @@
  *                       example: 1
  *                     code:
  *                       type: string
- *                       example: M001
- *                     name:
+ *                       example: NRN-7
+ *                     title:
  *                       type: string
- *                       example: Rendy
+ *                       example: The Lion, the Witch and the Wardrobe
+ *                     author:
+ *                       type: string
+ *                       example: C.S. Lewis
+ *                     stock:
+ *                       type: integer
+ *                       example: 3
  *       400:
- *         description: Bad Request
+ *         description: Validation errors
  *         content:
  *           application/json:
  *             schema:
@@ -259,12 +310,11 @@
  *                   additionalProperties:
  *                     type: string
  *             examples:
- *               member-not-found:
- *                 summary: Member not found
+ *               book-not-found:
+ *                 summary: Book not found
  *                 value:
  *                   errors:
- *                     id: "Member not found"
- *
+ *                     id: "Book not found"
  *       401:
  *         description: Unauthorized access
  *         content:
@@ -286,10 +336,10 @@
 
 /**
  * @swagger
- * /api/member/{id}:
+ * /api/book/{id}:
  *   put:
- *     summary: Update a member by ID
- *     tags: [Members]
+ *     summary: Update a book by ID
+ *     tags: [Books]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -298,7 +348,7 @@
  *         required: true
  *         schema:
  *           type: integer
- *         description: The member ID
+ *         description: The book ID
  *     requestBody:
  *       required: true
  *       content:
@@ -306,14 +356,26 @@
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - code
+ *               - title
+ *               - author
+ *               - stock
  *             properties:
- *               name:
+ *               code:
  *                 type: string
- *                 example: John Doe
+ *                 example: SHR-1
+ *               title:
+ *                 type: string
+ *                 example: A Study in Scarlet
+ *               author:
+ *                 type: string
+ *                 example: Arthur Conan Doyle
+ *               stock:
+ *                 type: integer
+ *                 example: 1
  *     responses:
  *       200:
- *         description: Successfully Update Member
+ *         description: Successfully Update Book
  *         content:
  *           application/json:
  *             schema:
@@ -321,7 +383,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Successfully Update Member
+ *                   example: Successfully Update Book
  *       400:
  *         description: Validation errors
  *         content:
@@ -334,22 +396,46 @@
  *                   additionalProperties:
  *                     type: string
  *             examples:
- *               name-required:
- *                 summary: Name is required
+ *               code-required:
+ *                 summary: Code is required
  *                 value:
  *                   errors:
- *                     name: "Name is required"
- *               name-unique:
- *                 summary: Name must be unique
+ *                     code: "Code is required"
+ *               book-code-unique:
+ *                 summary: Book code must be unique
  *                 value:
  *                   errors:
- *                     name: "Name must be unique"
- *               member-not-found:
- *                 summary: Member not found
+ *                     code: "Book code must be unique"
+ *               title-required:
+ *                 summary: Title is required
  *                 value:
  *                   errors:
- *                     id: "Member not found"
- *
+ *                     title: "Title is required"
+ *               author-required:
+ *                 summary: Author is required
+ *                 value:
+ *                   errors:
+ *                     author: "Author is required"
+ *               stock-required:
+ *                 summary: Stock is required
+ *                 value:
+ *                   errors:
+ *                     stock: "Stock is required"
+ *               stock-integer:
+ *                 summary: Stock must be an integer
+ *                 value:
+ *                   errors:
+ *                     stock: "Stock must be an integer"
+ *               stock-minimum:
+ *                 summary: Stock must be at least 1
+ *                 value:
+ *                   errors:
+ *                     stock: "Stock must be at least 1"
+ *               book-not-found:
+ *                 summary: Book not found
+ *                 value:
+ *                   errors:
+ *                     id: "Book not found"
  *       401:
  *         description: Unauthorized access
  *         content:
@@ -371,10 +457,10 @@
 
 /**
  * @swagger
- * /api/member/{id}:
+ * /api/book/{id}:
  *   delete:
- *     summary: Delete a member by ID
- *     tags: [Members]
+ *     summary: Delete a book by ID
+ *     tags: [Books]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -383,10 +469,10 @@
  *         required: true
  *         schema:
  *           type: integer
- *         description: The member ID
+ *         description: The book ID
  *     responses:
  *       200:
- *         description: Successfully Delete Member
+ *         description: Successfully Delete Book
  *         content:
  *           application/json:
  *             schema:
@@ -394,9 +480,9 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Successfully Delete Member
+ *                   example: Successfully Delete Book
  *       400:
- *         description: Bad Request
+ *         description: Validation errors
  *         content:
  *           application/json:
  *             schema:
@@ -407,12 +493,11 @@
  *                   additionalProperties:
  *                     type: string
  *             examples:
- *               member-not-found:
- *                 summary: Member not found
+ *               book-not-found:
+ *                 summary: Book not found
  *                 value:
  *                   errors:
- *                     id: "Member not found"
- *
+ *                     id: "Book not found"
  *       401:
  *         description: Unauthorized access
  *         content:

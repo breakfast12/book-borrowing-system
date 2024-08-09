@@ -1,7 +1,7 @@
 /**
  * Member response.
  */
-function MemberResponse(member) {
+function memberResponse(member) {
   return {
     message: "Successfully Store Member",
     member: {
@@ -12,4 +12,4 @@ function MemberResponse(member) {
   };
 }
 
-module.exports = MemberResponse;
+module.exports = memberResponse;
