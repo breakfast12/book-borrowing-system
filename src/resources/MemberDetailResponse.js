@@ -1,7 +1,7 @@
 /**
  * Member Detail response.
  */
-function MemberDetailResponse(member) {
+function memberDetailResponse(member) {
   return {
     message: "Successfully Show Detail Member",
     member: {
@@ -12,4 +12,4 @@ function MemberDetailResponse(member) {
   };
 }
 
-module.exports = MemberDetailResponse;
+module.exports = memberDetailResponse;

@@ -1,7 +1,7 @@
 /**
  * Login response.
  */
-function LoginResponse(user, token) {
+function loginResponse(user, token) {
   return {
     message: "Login successful",
     user: {
@@ -12,4 +12,4 @@ function LoginResponse(user, token) {
   };
 }
 
-module.exports = LoginResponse;
+module.exports = loginResponse;
